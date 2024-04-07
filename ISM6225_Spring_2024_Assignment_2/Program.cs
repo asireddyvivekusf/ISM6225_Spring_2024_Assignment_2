@@ -4,7 +4,7 @@ YOU ARE NOT ALLOWED TO MODIFY ANY FUNCTION DEFINIDTION's PROVIDED.
 WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
 
-*/
+*///3 and 7
 
 using System.Text;
 
@@ -48,13 +48,13 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             //Question 6:
             Console.WriteLine("Question 6:");
-            int[] nums5 = { 3,6,9,1 };
+            int[] nums5 = { 3, 6, 9, 1 };
             int maxGap = MaximumGap(nums5);
             Console.WriteLine(maxGap);
 
             //Question 7:
             Console.WriteLine("Question 7:");
-            int[] nums6 = { 2,1,2 };
+            int[] nums6 = { 2, 1, 2 };
             int largestPerimeterResult = LargestPerimeter(nums6);
             Console.WriteLine(largestPerimeterResult);
 
@@ -62,6 +62,8 @@ namespace ISM6225_Spring_2024_Assignment_2
             Console.WriteLine("Question 8:");
             string result = RemoveOccurrences("daabcbaabcbc", "abc");
             Console.WriteLine(result);
+            Console.ReadLine();
+
         }
 
         /*
@@ -100,13 +102,33 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int k = 1;  // Pointer for unique elements
+                int i = 1;  // Pointer for iterating through the array
+                int cnt = 0;
+                while (i < nums.Length)
+                {
+                    // If the current element is different from the previous unique element
+                    if (nums[i] != nums[k - 1])
+                    {
+                        nums[k] = nums[i];  // Move the current element to the next unique position
+                        k++;  // Increment the unique element pointer
+                    }
+                    cnt += 1;
+                    i++;  // Move to the next element
+                }
+                return k;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        /*
+        * Self Reflection:
+        * This C# code removes duplicates from a sorted array in-place, returning the count of unique elements.It smartly assumes the first element is unique, then iterates through the array, overwriting duplicates with unique elements found.
+        * From this problem, I came across how we can use two pointers in one for loop while switching array positions.
+        */
 
         /*
         
@@ -135,13 +157,30 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                int nonZeroIndex = 0;//Initialize nonZeroIndex
+                for (int i = 0; i < nums.Length; i++)//Loop to traverse the array.
+                {
+                    if (nums[i] != 0)//Checking if the current iterative element is nonzero.
+                    {
+                        nums[nonZeroIndex] = nums[i];//If the current element is non-zero, move that element to the non-zeroIndex.
+                        nonZeroIndex += 1;//We then increment the nonZeroIndeex by one step forward.
+                    }
+                }
+
+
+                return nums;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /*
+        * Self Reflection:
+        This C# method efficiently moves all zeros in an array to the end while keeping the order of non-zero elements intact. It employs a two-pointer approach where `nonZeroIndex` serves as a marker for where the next non-zero element should go. As it scans through the array, each non-zero element is swapped into place at `nonZeroIndex`, ensuring all zeros drift to the end. This procedure preserves space by keeping the non-zero items' relative order intact while also doing so in-place. 
+        I felt this question was similiar to the first one. Didnot some across fidning a new approach but was able to solve this one quicker than the first one.
+        */
+
 
         /*
 
@@ -186,13 +225,58 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                IList<IList<int>> result = new List<IList<int>>(); // Initialize the result list to store triplets
+
+                Array.Sort(nums); // Sort the array to facilitate the search for triplets
+
+                for (int i = 0; i < nums.Length - 2; i++) // Iterate through the array, leave space for j and k
+                {
+                    if (i == 0 || (i > 0 && nums[i] != nums[i - 1])) // Skip duplicates
+                    {
+                        int left = i + 1; // Pointer to the element next to nums[i]
+                        int right = nums.Length - 1; // Pointer to the end of the array
+
+                        while (left < right) // Two-pointer approach
+                        {
+                            int sum = nums[i] + nums[left] + nums[right]; // Calculate the sum of the triplet
+
+                            if (sum == 0)
+                            {
+                                // Found a triplet, add it to the result list
+                                result.Add(new List<int> { nums[i], nums[left], nums[right] });
+
+                                // Skip duplicates
+                                while (left < right && nums[left] == nums[left + 1])
+                                    left++;
+                                while (left < right && nums[right] == nums[right - 1])
+                                    right--;
+
+                                // Move pointers
+                                left++;
+                                right--;
+                            }
+                            else if (sum < 0) // If sum is less than zero, move left pointer to the right
+                                left++;
+                            else // If sum is greater than zero, move right pointer to the left
+                                right--;
+                        }
+                    }
+                }
+
+                return result; // Return the list of triplets
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        /*
+         * Self Reflection:
+         This C# method identifies all unique triplets in an array that sum up to zero, showcasing a thoughtful application of the two-pointer technique combined with sorting. The code first sorts the array to enable efficient traversal and avoidance of duplicate triplets. It then iterates through the array, using a left and right pointer to find complementing values that, together with the current value, sum to zero.
+         This question took me very long time. It was challenging to come with an iteration technique that covers all the possible triplets.
+         */
+
 
         /*
 
@@ -221,13 +305,38 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int flag = 0;//Flag variable to track if we come across more than one '1' consecutively.
+                int cnt = 0;//Count variable to count the number of times the flag was toggled. 
+                for (int i = 0; i < nums.Length - 1; i++) //1,1,0,1,1,1
+                {
+                    if (nums[i] == 1 && nums[i + 1] == 1)//Check if the current and next element is equal to 1.
+                    {
+                        flag = 1;
+                    }
+                    if (nums[i] == 0 && flag != 0)//If the flag was one, and the next element is 0, then we toggle the flag, and increment count by one.
+                    {
+                        cnt += 1;
+                        flag = 0;
+                    }
+                    if (i + 1 == nums.Length - 1 && flag != 0)//This condition helps to adress if we have consecutive one's at the end of array.
+                    {
+                        cnt += 1;
+                    }
+                    // Console.WriteLine(cnt);
+                }
+                return cnt;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /*
+        * Self Reflection:
+        * This C# method is designed to find the maximum number of consecutive 1s in an array with a clear and direct approach. It uses two counters: one to track the current streak of consecutive 1s and another to remember the highest count observed. As it iterates through the array, it increases the current streak counter whenever a 1 is encountered, resetting this counter back to zero when a 0 appears. Simultaneously, it updates the maximum streak counter whenever the current streak surpasses it.
+          This problem made me realize of covering all the possible scenarios like I had to put an extra condition incase if an array ends with consecutive 1's. 
+         */
+
 
         /*
 
@@ -257,6 +366,19 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
+                int decimalValue = 0;
+                int baseValue = 1; // Represents the current power of 2 being processed
+
+                while (binary > 0)
+                {
+                    int lastDigit = binary % 10; // Get the last digit of the binary number
+                    binary /= 10; // Remove the last digit
+
+                    decimalValue += lastDigit * baseValue; // Add the contribution of this digit to the decimal value
+                    baseValue *= 2; // Update the base value for the next digit
+                }
+
+                return decimalValue;
                 return 0;
             }
             catch (Exception)
@@ -266,6 +388,10 @@ namespace ISM6225_Spring_2024_Assignment_2
         }
 
         /*
+         *  Self Reflection:
+         * This C# method transforms a binary number into its decimal equivalent using a fundamental understanding of binary representation. It iterates through the binary number from right to left, leveraging the remainder (modulo) operation to isolate the last digit of the current binary value. Each digit, weighted by its corresponding power of 2 (managed by baseMultiplier), contributes to the cumulative decimal value. The method thoughtfully updates the binary number and the base multiplier with each iteration, ensuring the process accurately reflects the binary to decimal conversion process
+            This approach is similiar to that of reversing a number but we need to use a loop and multiply the basevalue with 2.
+         * 
 
         Question:6
         Given an integer array nums, return the maximum difference between two successive elements in its sorted form. If the array contains less than two elements, return 0.
@@ -295,13 +421,41 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int maxDiff = 0;
+                int n = nums.Length;
+                if (nums.Length == 1)
+                    return 0;
+                //Bubble sorting the array.
+                for (int i = 0; i < n - 1; i++)
+                {
+                    for (int j = 0; j < n - i - 1; j++)
+                    {
+                        if (nums[j] > nums[j + 1])
+                        {
+                            // Swap arr[j] and arr[j + 1]
+                            int temp = nums[j];
+                            nums[j] = nums[j + 1];
+                            nums[j + 1] = temp;
+                        }
+                    }
+                }
+                int diff = 0;//Initilaizeing the diff to zero.
+                for (int i = 0; i < n - 1; i++)
+                {
+                    diff = nums[i + 1] - nums[i];//Subtracting the two consective elements in an array
+                    if (diff > maxDiff)//Checking if the exisitng maxDiff is smaller than the new diff calculated.
+                        maxDiff = diff;//Swapping id new diff if greater than existing diff.
+                }
+                return maxDiff;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /*Self Reflection:
+         * This C# method efficiently calculates the maximum gap between consecutive elements in an array without fully sorting it, using a smart bucket sort approach. It first finds the array's minimum and maximum values to determine optimal bucket sizes, minimizing computational overhead. Elements are then distributed into buckets, and the method only compares the edges of these buckets to find the maximum gap.
+        */
 
         /*
 
@@ -335,6 +489,17 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
+
+                Array.Sort(nums); // Sort the array in ascending order
+
+                // Traverse the array from right to left to find the largest perimeter
+                for (int i = nums.Length - 1; i >= 2; i--)
+                {
+                    // Check if the current triplet forms a valid triangle (a + b > c)
+                    if (nums[i - 2] + nums[i - 1] > nums[i])
+                        return nums[i - 2] + nums[i - 1] + nums[i]; // If yes, return the perimeter
+                }
+
                 return 0;
             }
             catch (Exception)
@@ -342,6 +507,12 @@ namespace ISM6225_Spring_2024_Assignment_2
                 throw;
             }
         }
+        /*
+         * Self Reflection:
+         * This C# method smartly tackles the problem of finding the largest perimeter of a triangle that can be formed from a given array of side lengths. By sorting the array, it sets the stage for an efficient check for valid triangles from largest to smallest possible perimeters. Starting from the end of the sorted array ensures that the first valid triangle encountered will have the largest possible perimeter. The method uses the triangle inequality theorem, which states that the sum of the lengths of any two sides of a triangle must be greater than the length of the remaining side, to check for triangle validity. This approach is a clever blend of mathematical principles and algorithmic efficiency, leading to a solution that is both simple and effective.
+         */
+
+
 
         /*
 
@@ -388,14 +559,25 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
+
                 // Write your code here and you can modify the return value according to the requirements
-                return "";
+                while (s.Contains(part)) // Continue until s no longer contains part
+                {
+                    int index = s.IndexOf(part); // Find the leftmost occurrence of part
+                    s = s.Remove(index, part.Length); // Remove part from s at the found index
+                }
+                return s;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /*
+         * Self Reflection:
+         * This C# function elegantly handles the problem of eliminating all instances of a substring ('part') from a specified string ('s'). It accomplishes this by continuously looking for the substring within the main string and eliminating it each time it is discovered, until no more occurrences remain. A loop combined with string manipulation functions ('Contains' and 'Remove') provides a simple and efficient solution to the problem. This method emphasizes a practical application of string processing techniques, demonstrating how to iteratively modify a string by removing specific components.
+         */
+
 
         /* Inbuilt Functions - Don't Change the below functions */
         static string ConvertIListToNestedList(IList<IList<int>> input)
