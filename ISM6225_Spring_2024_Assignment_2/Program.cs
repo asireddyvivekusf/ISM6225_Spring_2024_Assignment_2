@@ -116,6 +116,16 @@ namespace ISM6225_Spring_2024_Assignment_2
                     cnt += 1;
                     i++;  // Move to the next element
                 }
+                for(int j=k;j<nums.Length;j++)
+                {
+                    nums[j] = 0;//Changing the repeated elements to zero.
+                }
+                //printing the array
+                for(int j=0;j<nums.Length;j++)
+                {
+                    Console.Write(nums[j]);
+                }
+                Console.WriteLine();
                 return k;
             }
             catch (Exception)
