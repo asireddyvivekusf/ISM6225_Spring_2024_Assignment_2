@@ -331,7 +331,6 @@ namespace ISM6225_Spring_2024_Assignment_2
         /*
         * Self Reflection:
         * This C# method is designed to find the maximum number of consecutive 1s in an array with a clear and direct approach. It uses two counters: one to track the current streak of consecutive 1s and another to remember the highest count observed. As it iterates through the array, it increases the current streak counter whenever a 1 is encountered, resetting this counter back to zero when a 0 appears. Simultaneously, it updates the maximum streak counter whenever the current streak surpasses it.
-          This problem made me realize of covering all the possible scenarios like I had to put an extra condition incase if an array ends with consecutive 1's. 
          */
 
 
