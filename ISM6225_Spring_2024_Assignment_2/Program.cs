@@ -305,26 +305,23 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                int flag = 0;//Flag variable to track if we come across more than one '1' consecutively.
-                int cnt = 0;//Count variable to count the number of times the flag was toggled. 
-                for (int i = 0; i < nums.Length - 1; i++) //1,1,0,1,1,1
+                int maxConsecutiveOnes = 0; // Initialize variable to store maximum consecutive ones
+                int currentConsecutiveOnes = 0; // Initialize variable to store current consecutive ones
+
+                foreach (int num in nums) // Iterate through the array
                 {
-                    if (nums[i] == 1 && nums[i + 1] == 1)//Check if the current and next element is equal to 1.
+                    if (num == 1) // If the current element is 1
                     {
-                        flag = 1;
+                        currentConsecutiveOnes++; // Increment current consecutive ones
+                        maxConsecutiveOnes = Math.Max(maxConsecutiveOnes, currentConsecutiveOnes); // Update max consecutive ones if needed
                     }
-                    if (nums[i] == 0 && flag != 0)//If the flag was one, and the next element is 0, then we toggle the flag, and increment count by one.
+                    else // If the current element is 0
                     {
-                        cnt += 1;
-                        flag = 0;
+                        currentConsecutiveOnes = 0; // Reset current consecutive ones
                     }
-                    if (i + 1 == nums.Length - 1 && flag != 0)//This condition helps to adress if we have consecutive one's at the end of array.
-                    {
-                        cnt += 1;
-                    }
-                    // Console.WriteLine(cnt);
                 }
-                return cnt;
+
+                return maxConsecutiveOnes; // Return the maximum consecutive ones
             }
             catch (Exception)
             {
